@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moderation History Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  .container {
+    text-align: center;
+  }
+  input[type="text"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 300px;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  #result {
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Moderation History Checker</h1>
+  <input type="text" id="nameInput" placeholder="Enter a name">
+  <button onclick="checkModeration()">Check Moderation</button>
+  <div id="result"></div>
+</div>
+
+<script>
+  function checkModeration() {
+    var name = document.getElementById('nameInput').value;
+    var resultContainer = document.getElementById('result');
+    
+    // Fetch moderation history from the JSON file
+    fetch('moderation_history.json')
+      .then(response => response.json())
+      .then(moderationHistory => {
+        if (moderationHistory.hasOwnProperty(name)) {
+          resultContainer.innerHTML = '<h2>Moderation History for ' + name + '</h2>';
+          moderationHistory[name].forEach(function(entry) {
+            resultContainer.innerHTML += '<p>' + entry + '</p>';
+          });
+        } else {
+          resultContainer.innerHTML = '<p>No Moderation found!</p>';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching moderation history:', error);
+      });
+  }
+</script>
+</body>
+</html>
